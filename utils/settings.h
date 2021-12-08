@@ -1,19 +1,28 @@
 #pragma once
+/*
+ * Глобальные настройки программы.
+ */
 
-
-// beehive settings
+// Настройки улья.
+// Максимальное количество меда в улье.
 #define TOTAL_AMOUNT_OF_HONEY 30
-#define BOUNDARY_AMOUNT_OF_HONEY 15
-
+// Минимальное количество пчел в улье.
 #define LEAST_NUMBER_OF_BEES 1
 
 
-// bees settings
+// Настройки пчел.
+// Минимальное время ожидания в мс.
 #define MIN_WAIT_BEES 1'000
+// Максимальное время ожидания в мс.
 #define MAX_WAIT_BEES 5'000
 
 
-// Winnie-the-Pooh settings
+// Настройки Винни-Пуха.
+// Минимальное количество меда в улье, после которого Винни-Пух попытается напасть на улей.
+#define BOUNDARY_AMOUNT_OF_HONEY 15
+// Количество пчел в улье, при котором Винни-Пух не сможет украсть мед.
 #define DANGEROUS_NUMBER_OF_BEES 3
+// Минимальное время ожидания в мс.
 #define MIN_WAIT_WINNIE 2'000
+// Максимальное время ожидания в мс.
 #define MAX_WAIT_WINNIE 7'000

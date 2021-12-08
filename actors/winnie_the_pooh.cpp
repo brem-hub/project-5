@@ -3,50 +3,51 @@
 #include "../utils/utils.h"
 #include "../utils/settings.h"
 
-WinnieThePooh::WinnieThePooh(const Beehive *beehive, void *context)
-    : beehive_(const_cast<Beehive *>(beehive)),
-      context_(context) {
-}
+WinnieThePooh::WinnieThePooh(const Beehive *beehive)
+    : beehive_(const_cast<Beehive *>(beehive))
+    {
+    }
 
-void WinnieThePooh::run() {
+void WinnieThePooh::run(context* ctx) {
     printf("Initiated Winnie-the-Pooh\n");
+    // Основной цикл.
     while (true) {
-        // if context is not null - break from the cycle.
-        if (context_) {
+        // Если контекст был закрыт, выйти из функции и закрыть поток.
+        if (ctx->done()) {
             printf("Winnie-the-Pooh exiting from it's cycle\n");
             return;
         }
 
+        // Если количество меда достаточно, Винни-Пух попытается атаковать улей.
+        // Если у Винни-Пуха не получится получить весь мед, то он вылечится
+        //  и опять попытается атаковать.
         if (beehive_->getCurrentAmountOfHoney() > BOUNDARY_AMOUNT_OF_HONEY) {
-            // Winnie-the-Pooh can attack the hive.
             attack();
             continue;
         }
 
-        // Winnie-the-Pooh sleeps.
-        doImportantWork();
+        // Эмуляция полезной работы ожиданием.
+        doImportantWork(MIN_WAIT_WINNIE, MAX_WAIT_WINNIE);
     }
-}
-
-void WinnieThePooh::doImportantWork() {
-    std::chrono::milliseconds timer(random(MIN_WAIT_WINNIE, MAX_WAIT_WINNIE));
-    std::this_thread::sleep_for(timer);
 }
 
 void WinnieThePooh::attack() {
     printf("Winnie-the-Pooh tries to attack the hive\n");
-//    beehive_->underAttack();
 
-    if (beehive_->getCurrentNumberOfBees() > DANGEROUS_NUMBER_OF_BEES) {
-        // Winnie-the-Pooh got spooked.
-        printf("Winnie-the-Pooh got scared and he flew away!\n");
-//        beehive_->releaseAttack();
-        doImportantWork();
+    // Мы считаем, что атака происходит моментально, поэтому не берем мьютексы на атаку,
+    //  только на текущее количество пчел в улье.
+    int current_bees = beehive_->getCurrentNumberOfBees();
+    if (current_bees > DANGEROUS_NUMBER_OF_BEES) {
+        // Винни-Пух был напуган пчелами.
+        printf("Winnie-the-Pooh got scared and flew away, because there were %d bees\n", current_bees);
+        // Эмуляция "лечения" укуса.
+        doImportantWork(MIN_WAIT_WINNIE, MAX_WAIT_WINNIE);
         return;
     }
 
-    printf("Winnie-the-Pooh succeeded in stealing the honey\n");
-    // Steal all the honey.
-    beehive_->setAmountOfHoneyLocked(0);
-//    beehive_->releaseAttack();
+    int current_honey = beehive_->getCurrentAmountOfHoney();
+    printf("Winnie-the-Pooh succeeded in stealing the honey. He stole %d oz of honey\n", current_honey);
+
+    // Винни-Пух крадет весь мед.
+    beehive_->resetHoneyAmount();
 }

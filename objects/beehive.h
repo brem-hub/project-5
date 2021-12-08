@@ -3,31 +3,65 @@
 #include <thread>
 #include <mutex>
 
+/*
+ * В папке objects/ хранятся разделяемые объекты, которые будут доступны нескольким потокам.
+ */
+
+/*
+ * Класс Beehive определяет объект улей.
+ * В улье живут пчелы(Bee) и улей пытается атаковать Винни-Пух(WinnieThePooh).
+ * Класс Beehive предоставляет доступ к количеству меда и количеству пчел в улье.
+ * Так как доступ к этим параметрам создает критические секции,
+ *  то используются стандартные мьютексы, для защиты от data-race.
+ */
 class Beehive {
  public:
+  /*
+   * Конструктор.
+   * @param: number_of_bees - максимальное число пчел в улье.
+   */
   explicit Beehive(int number_of_bees);
-
+  /*
+   * Получить текущее количество пчел в улье.
+   * Потокобезопасный метод.
+   * @returns: текущее количество пчел в улье.
+   */
   int getCurrentNumberOfBees();
-
+  /*
+   * Получить текущее количество меда в улье.
+   * Потокобезопасный метод.
+   * @returns: текущее количество пчел в улье.
+   */
   int getCurrentAmountOfHoney();
-
-  void setAmountOfHoneyLocked(int new_amount);
-
+  /*
+   * Сбросить количество меда в базовое(0) значение.
+   * Потокобезопасный метод.
+   */
+  void resetHoneyAmount();
+  /*
+   * Вернуть пчелу в улей.
+   * Потокобезопасный метод.
+   */
   void appendBee();
-
+  /*
+   * Попытаться выпустить пчелу из улья.
+   * Потокобезопасный метод.
+   * @returns: в случае успеха - true.
+   */
   bool tryReleaseBee();
-
-  void appendHoney();
-
-  void underAttack();
-
-  void releaseAttack();
+  /*
+   * Добавить 1 единицу меда в улей.
+   * Потокобезопасный метод.
+   * @returns: количество меда до добавления.
+   */
+  int appendHoney();
 
  private:
-
   std::mutex bee_mutex_;
-  int current_number_of_bees_{};
+  // Текущее количество пчел в улье.
+  int current_number_of_bees_;
 
   std::mutex honey_mutex_;
-  int current_amount_of_honey_{};
+  // Текущее количество меда в улье.
+  int current_amount_of_honey_;
 };

@@ -2,6 +2,8 @@
 #include <thread>
 #include "actors/winnie_the_pooh.h"
 #include "actors/bee.h"
+#include "utils/context.h"
+#include "utils/signal_handler.h"
 #include <vector>
 
 
@@ -11,36 +13,26 @@ int main() {
 
     std::vector<std::thread> bee_threads;
 
+    context exit_context;
 
-    void** exit_context = new void *[1];
+    int number_of_bees = 10;
+    Beehive hive(number_of_bees);
 
-    Beehive hive(10);
+    WinnieThePooh winnie(&hive);
 
-    WinnieThePooh winnie(&hive, exit_context);
-
-    bees.reserve(10);
-    for (int i = 0; i < 10; ++i) {
-        bees.emplace_back(&hive, exit_context, i);
+    bees.reserve(number_of_bees);
+    bee_threads.reserve(number_of_bees);
+    for (int i = 0; i < number_of_bees; ++i) {
+        bees.emplace_back(&hive, i);
+        bee_threads.emplace_back(&Bee::run, bees[i], &exit_context);
     }
 
-    std::thread winnie_the_pooh(&WinnieThePooh::run, winnie);
+    std::thread winnie_the_pooh(&WinnieThePooh::run, winnie, &exit_context);
 
-    bee_threads.reserve(10);
-    for (int i = 0; i < 10; ++i) {
-        bee_threads.emplace_back(&Bee::run, bees[i]);
-    }
-
-
-    // wait for 10 seconds
-    std::chrono::seconds timer(10);
-    std::this_thread::sleep_for(timer);
-
-    // send exit command.
-    // TODO(bremka): use context class.
-    exit_context = (void*) 1;
+    signal_handler::handle(&exit_context);
 
     winnie_the_pooh.join();
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < number_of_bees; ++i) {
         bee_threads[i].join();
     }
 

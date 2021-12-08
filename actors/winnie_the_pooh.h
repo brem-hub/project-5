@@ -1,19 +1,49 @@
 #pragma once
 
 #include "../objects/beehive.h"
+#include "../utils/context.h"
+
+/*
+ * Папка actors/ содержит классы, поддерживающие интерфейс
+ *
+ *      class runnable_actor {
+ *          void run(context *);
+ *      };
+ *
+ * Сам интерфейс и наследование не были реализованы, чтобы не перегружать код.
+ * runnable_actor позволяет реализовать поддержку потоков для классов и единый метод входа - void run(context* ctx).
+ * Контекст используется для реализации graceful shutdown.
+ */
+
+/*
+ * Класс WinnieThePooh определяет объект Винни-Пух.
+ * WinnieThePooh реализует интерфейс runnable_actor.
+ * Указатель на объект Beehive передается в конструкторе и не может быть изменен во время работы.
+ */
 class WinnieThePooh {
  public:
-  WinnieThePooh(const Beehive* beehive, void* context);
-
-  void run();
-
-  static void doImportantWork();
+  /*
+   * Конструктор.
+   * @param: beehive - улей, с которым будет взаимодействовать Винни-Пух.
+   */
+  explicit WinnieThePooh(const Beehive* beehive);
+  /*
+   * Точка входа потока.
+   * Данный метод запускает бесконечный цикл до тех пор, пока контекст не будет закрыт.
+   * В цикле Винни-Пух проверяет контекст, потом старается напасть на улей.
+   * @param: ctx - контекст.
+   */
+  void run(context* ctx);
 
  private:
+  /*
+   * Попытаться атаковать улей.
+   * При удачной атаке количество меда в улье станет равно 0.
+   * При неудачной атаке Винни-Пух убежит без меда.
+   */
   void attack();
 
  private:
+  // улей, с которым будет взаимодействовать Винни-Пух.
   Beehive* beehive_;
-  void* context_;
-
 };

@@ -2,22 +2,46 @@
 
 #include <cstdio>
 #include "../objects/beehive.h"
+#include "../utils/context.h"
 
-// class bee represents one bee that lives in the Beehive.
-// it can get out of the Beehive to gather some honey if needed.
-// if it is the last bee in the hive - it won't leave.
+/*
+ * Папка actors/ содержит классы, поддерживающие интерфейс
+ *
+ *      class runnable_actor {
+ *          void run(context *);
+ *      };
+ *
+ * Сам интерфейс и наследование не были реализованы, чтобы не перегружать код.
+ * runnable_actor позволяет реализовать поддержку потоков для классов и единый метод входа - void run(context* ctx).
+ * Контекст используется для реализации graceful shutdown.
+ */
+
+/*
+ * Класс Bee определяет объект "пчела", которая взаимодействует с Beehive.
+ * Bee реализует интерфейс runnable_actor.
+ * Указатель на объект Beehive передается в конструктор и не может быть изменен во время работы.
+ */
 class Bee {
  public:
-  explicit Bee(const Beehive* beehive, void* context, int uuid);
+  /*
+   * Конструктор.
+   * @param: beehive - указатель на улей, к которому относится данная пчела.
+   * @param: uuid - уникальный идентификатор пчелы, используется при выводе статуса пчелы в консоль.
+   */
+  explicit Bee(const Beehive* beehive, int uuid);
 
-  void run();
+  /*
+   * Точка входа потока.
+   * Данный метод запускает бесконечный цикл до тех пор, пока контекст не будет закрыт.
+   * В цикле пчела проверяет контекст, потом старается вылететь из улья,
+   *  иначе остается в улье и ожидает.
+   * @param: ctx - контекст.
+   */
+  void run(context* ctx);
 
  private:
-
-  static void doImportantWork();
-
- private:
+  // Улей, к которому относится данная пчела.
   Beehive* beehive_;
-  void* context_;
+  // Уникальный идентификатор.
   int uuid_;
 };

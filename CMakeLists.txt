@@ -17,12 +17,15 @@ set(HEADER_FILES
         objects/beehive.h
         utils/settings.h
         utils/utils.h
+        utils/context.h
+        utils/signal_handler.h
         )
 
 set(SOURCE_FILES
         actors/bee.cpp
         actors/winnie_the_pooh.cpp
         objects/beehive.cpp
+        utils/context.cpp
         )
 
 add_executable(program
