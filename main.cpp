@@ -80,6 +80,12 @@ int main(int argc, char* argv[]) {
         return error_code;
     }
 
+    if (number_of_bees <= 0) {
+        std::cout << ARGC_EXCEPTION_MESSAGE;
+        error_code = 1;
+        return error_code;
+    }
+
     Beehive hive(number_of_bees);
     WinnieThePooh winnie(&hive);
 

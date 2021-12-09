@@ -8,6 +8,7 @@
                         "\n"                                                                                \
                         "OPTIONS:\n"                                                                        \
                         " -n, --number-of-bees\t Specify number of bees in the beehive\n"                   \
+                        "\t\t\t type: positive non-zero integer\n\n"                                        \
                         " -h, --help\t\t Get this help message\n"                                           \
                         "\n"                                                                                \
                         "\n"                                                                                \
@@ -24,8 +25,8 @@
                         "\tCLion local terminal does not allow to send SIGINT with `Ctrl + C`.\n\n"         \
                         "`stop_program.sh` script is provided to stop the program correctly.\n"             \
                         "\tIt stops the program from bin/ folder only,\n"                                   \
-                        "\tso build and launch program from bin/"
-
+                        "\tso build and launch program from bin/\n\n"                                       \
+                        "Other parameters can be changed in /utils/settings.h file.\n"                      \
 
 #define ARGC_EXCEPTION_MESSAGE  "Incorrect program input\n" \
                                 "Try 'program --help(-h)' for more information."
