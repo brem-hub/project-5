@@ -2,6 +2,7 @@
 #include <thread>
 #include "actors/winnie_the_pooh.h"
 #include "actors/bee.h"
+#include "utils/settings.h"
 #include "utils/context.h"
 #include "utils/signal_handler.h"
 #include "utils/messages.h"
@@ -80,7 +81,7 @@ int main(int argc, char* argv[]) {
         return error_code;
     }
 
-    if (number_of_bees <= 0) {
+    if (number_of_bees < DANGEROUS_NUMBER_OF_BEES) {
         std::cout << ARGC_EXCEPTION_MESSAGE;
         error_code = 1;
         return error_code;

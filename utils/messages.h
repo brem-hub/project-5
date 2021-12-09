@@ -8,7 +8,7 @@
                         "\n"                                                                                \
                         "OPTIONS:\n"                                                                        \
                         " -n, --number-of-bees\t Specify number of bees in the beehive\n"                   \
-                        "\t\t\t type: positive non-zero integer\n\n"                                        \
+                        "\t\t\t type: integer >= 3\n\n"                                                     \
                         " -h, --help\t\t Get this help message\n"                                           \
                         "\n"                                                                                \
                         "\n"                                                                                \

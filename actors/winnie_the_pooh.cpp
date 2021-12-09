@@ -51,9 +51,7 @@ void WinnieThePooh::attack() {
         return;
     }
 
-    int current_honey = beehive_->getCurrentAmountOfHoney();
-    printf("Winnie-the-Pooh succeeded in stealing the honey. He stole %d oz of honey\n", current_honey);
-
     // Винни-Пух крадет весь мед.
-    beehive_->resetHoneyAmount();
+    int current_honey = beehive_->resetHoneyAmount();
+    printf("Winnie-the-Pooh succeeded in stealing the honey. He stole %d oz of honey\n", current_honey);
 }

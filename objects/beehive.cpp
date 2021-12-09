@@ -8,10 +8,12 @@ Beehive::Beehive(int number_of_bees)
 
       }
 
-void Beehive::resetHoneyAmount() {
+int Beehive::resetHoneyAmount() {
     honey_mutex_.lock();
+    int local_copy = current_amount_of_honey_;
     current_amount_of_honey_ = 0;
     honey_mutex_.unlock();
+    return local_copy;
 }
 
 int Beehive::getCurrentNumberOfBees() {
