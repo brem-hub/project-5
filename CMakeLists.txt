@@ -19,6 +19,7 @@ set(HEADER_FILES
         utils/utils.h
         utils/context.h
         utils/signal_handler.h
+        utils/messages.h
         )
 
 set(SOURCE_FILES
